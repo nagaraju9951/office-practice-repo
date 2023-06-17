@@ -1,0 +1,26 @@
+- name: Setup Tomcat8 & Deploy Artifact
+  hosts: tomcat
+  become: yes
+  vars:
+    war_file: /opt/jenkins/workspace/VisOps/t056/sample-java-app/deploy-on-tomcat/target/HelloWorld.war  
+
+  tasks:
+    - name: Copy WAR file from Jenkins to Tomcat server
+      copy:
+        src: "{{ war_file }}"
+        dest: /usr/local/tomcat8/apache-tomcat-8.5.37/webapps/ROOT.war
+
+    - name: Stop Tomcat service
+      service:
+        name: tomcat
+        state: stopped
+
+    - name: Delete existing ROOT directory
+      file:
+        path: /usr/local/tomcat8/apache-tomcat-8.5.37/webapps/ROOT
+        state: absent
+
+    - name: Start Tomcat service
+      service:
+        name: tomcat
+        state: started

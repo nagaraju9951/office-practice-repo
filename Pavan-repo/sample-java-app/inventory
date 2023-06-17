@@ -1,0 +1,12 @@
+; -*-mode: ansible; coding: utf-8;-*-
+
+
+[tomcat]
+
+tomcat-server    ansible_host=3.80.136.160   ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="/opt/jenkins/workspace/VisOps/t056/sample-java-app/deploy-on-tomcat/demo.pem"
+
+
+
+
+[all:vars]
+ansible_ssh_pipelining=no

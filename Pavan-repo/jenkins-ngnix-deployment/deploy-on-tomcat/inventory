@@ -1,0 +1,12 @@
+; -*-mode: ansible; coding: utf-8;-*-
+
+
+[nginx]
+
+nginx-server    ansible_host=44.212.72.231   ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="/home/ubuntu/demo.pem"
+
+
+
+
+[all:vars]
+ansible_ssh_pipelining=no

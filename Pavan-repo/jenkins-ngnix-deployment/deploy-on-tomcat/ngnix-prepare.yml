@@ -1,0 +1,22 @@
+---
+- name: Install NGINX on Ubuntu
+  hosts: nginx
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      tags: apt
+
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+      tags: nginx
+
+    - name: Start NGINX service
+      service:
+        name: nginx
+        state: started
+        enabled: yes

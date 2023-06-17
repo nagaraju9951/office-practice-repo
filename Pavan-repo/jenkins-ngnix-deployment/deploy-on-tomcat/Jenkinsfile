@@ -1,0 +1,25 @@
+pipeline {
+    agent {
+        node {
+            label 't056-runner'
+        }
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                git credentialsId: 'ca-git-access', branch: 'manual', url: "https://git.cloudavise.com/visops/t056/jenkins-ngnix-deployment.git"
+            }
+        }
+        stage('prepare') {
+            steps {
+                sh "chmod +x deploy_script.sh"
+                sh "sudo ./deploy_script.sh prepare"
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh "./deploy_script.sh deploy"
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+---
+- name: Copy index.html to NGINX server
+  hosts: nginx
+  become: true
+
+  tasks:
+    - name: Copy index.html file
+      copy:
+        src: index.html
+        dest: /var/www/html/
+
+
+    - name: Restart NGINX
+      service:
+        name: nginx
+        state: restarted

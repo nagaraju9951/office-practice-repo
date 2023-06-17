@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-app
+  labels:
+    app: node-app
+spec:
+  restartPolicy: Always
+  imagePullSecrets:
+    - name: my-ecr-creds
+  containers:
+    - name: myapp-container
+      image: 634441478571.dkr.ecr.us-east-1.amazonaws.com/action:latest
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 3000
