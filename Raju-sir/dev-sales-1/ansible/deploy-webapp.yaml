@@ -1,0 +1,36 @@
+---
+- hosts: webservers
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Copy Webapp
+      copy:
+        src: ../build
+        dest: /opt
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: down docker-compose
+      docker_compose:
+        project_src: /opt/build
+        state: absent
+
+    - name: Inspect application image
+      docker_image_info:
+        name: build_sales1:latest
+      register: result
+
+    - name: Remove image
+      community.docker.docker_image:
+        state: absent
+        name: build_sales1
+        tag: latest
+      when: result.images | length > 0
+
+    - name: up docker-compose
+      docker_compose:
+        project_src: /opt/build
+        state: present
+        scale:
+          app: 1

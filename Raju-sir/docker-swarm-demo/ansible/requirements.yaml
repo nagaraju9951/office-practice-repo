@@ -1,0 +1,4 @@
+# Install a role from GitLab
+- src: git+https://git.cloudavise.com/ansible/docker-role.git
+  version: master
+  name: docker-role

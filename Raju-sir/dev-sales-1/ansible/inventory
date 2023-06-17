@@ -1,0 +1,15 @@
+; -*-mode: ansible; coding: utf-8;-*-
+
+
+[webservers]
+
+dev-sales-app01     ansible_host=10.7.2.30    ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="./dev-sales-ssh.pem"
+
+
+[loadbalancer]
+
+dev-sales-lb        ansible_host=18.206.236.115      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Documents/CE/dev-sales-ssh.pem"
+
+
+[all:vars]
+ansible_ssh_pipelining=no

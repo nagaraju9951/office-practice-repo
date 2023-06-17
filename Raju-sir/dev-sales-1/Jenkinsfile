@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        node {
+            label 't060-runner'
+        }
+    }
+
+   stages {
+      stage('Clone Repository') {
+         steps {
+            cleanWs()
+            git credentialsId: 'ca-git-access', branch: 'develop', url: "https://git.cloudavise.com/visops/t060/dev-sales-1"
+         }
+      }
+      stage('Pre-Build Tasks') {
+         steps {
+            sh '''ls
+                cd ansible
+                ls
+                ansible-vault decrypt --vault-password-file /opt/jenkins/.secrets/vault_id dev-sales-ssh.pem
+                chmod 400 dev-sales-ssh.pem''' 
+         }
+      }
+      stage('Deploy App') {
+         steps {
+           sh '''cd ansible
+                ansible-playbook -i inventory deploy-webapp.yaml''' 
+         }
+      }
+   }
+}

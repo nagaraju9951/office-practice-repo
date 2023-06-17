@@ -1,0 +1,7 @@
+services:
+  sales1:
+    restart: on-failure
+    build: /opt/build
+    hostname: sales1
+    ports:
+      - '80:80'

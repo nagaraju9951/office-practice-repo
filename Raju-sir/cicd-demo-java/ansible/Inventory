@@ -1,0 +1,20 @@
+; -*-mode: ansible; coding: utf-8;-*-
+
+[jenkins]
+
+jenkins01     ansible_host=3.83.131.143      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="./test-ec2.pem"
+
+
+[webservers]
+
+webapp01       ansible_host=54.82.52.82      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="./test-ec2.pem"
+
+[all]
+
+jenkins01     ansible_host=3.83.131.143         ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="./test-ec2.pem"
+webapp01      ansible_host=54.82.52.82      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="./test-ec2.pem"
+
+
+[all:vars]
+ansible_ssh_pipelining=no
+ansible_ssh_common_args='-o StrictHostKeyChecking=accept-new'

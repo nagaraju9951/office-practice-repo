@@ -1,0 +1,38 @@
+---
+- hosts: webservers
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Copy Docker compose file
+      copy:
+        src: ../hello-world/{{ item }}
+        dest: /opt
+        owner: root
+        group: root
+        mode: '0644'
+      with_items:
+        - compose.yaml
+
+    - name: down docker-compose
+      docker_compose:
+        project_src: /opt
+        state: absent
+
+    - name: Inspect application image
+      docker_image_info:
+        name: hello-world:latest
+      register: result
+
+    - name: Remove image
+      community.docker.docker_image:
+        state: absent
+        name: hello-world
+        tag: latest
+      when: result.images | length > 0
+
+    - name: up docker-compose
+      docker_compose:
+        project_src: /opt
+        state: present
+        scale:
+          app: 1

@@ -1,0 +1,46 @@
+- hosts: jenkins
+  become: yes
+  tasks:
+    - name: 'Update apt-get'
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all apt packages
+      apt:
+        upgrade: dist
+        force_apt_get: yes
+
+    - name: 'Install default-jdk'
+      apt:
+        name: ['default-jdk']
+        state: latest
+
+    - name: import jenkins key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        state: present
+
+    - name: Download jenkins.repo
+      apt_repository:
+        repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+        state: present
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        state: latest
+    - name: 'Install jenkins'
+      apt:
+        name: jenkins
+        state: latest
+
+    - name: 'Start jenkins'
+      service:
+        name: jenkins
+        enabled: true
+        state: started
+
+    - name: 'install maven'
+      apt:
+        name: ['maven']
+        state: latest

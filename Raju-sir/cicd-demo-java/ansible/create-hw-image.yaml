@@ -1,0 +1,26 @@
+---
+- name: 'Create Docker image and Push to repository'
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Log into DockerHub
+      community.general.docker_login:
+        username: '{{ dockerusr }}'
+        password: '{{ dockerpass }}'
+    - name: Build image
+      community.docker.docker_image:
+        build:
+          path: ../hello-world
+        name: ynraju4/hello-world
+        tag: latest
+        push: true
+        source: build
+    - name: Remove latest image
+      docker_image:
+        state: absent
+        name: ynraju4/hello-world
+        tag: latest
+    - name: Log out of DockerHub
+      docker_login:
+        state: absent

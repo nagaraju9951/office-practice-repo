@@ -1,0 +1,30 @@
+pipeline {
+   agent {
+        node {
+            label 't060-runner'
+        }
+    }
+   stages {
+      stage('Preparation') {
+         steps {
+            cleanWs()
+            git credentialsId: 'ca-git-access', branch: 'develop', url: "https://git.cloudavise.com/visops/t060/cicd-demo-java.git"
+         }
+      }
+      stage('Create Application Build') {
+         steps {
+            sh '''cd hello-world
+               mvn install clean package'''
+         }
+      }
+      stage('Deploy Build') {
+         steps {
+            sh '''ls
+               cd ansible
+               ansible-vault decrypt --vault-id /opt/jenkins/.secrets/vault_id test-ec2.pem
+               chmod 400 test-ec2.pem
+               ansible-playbook -i Inventory deploy-on-tomcat.yaml''' 
+         }
+      }
+   }
+}

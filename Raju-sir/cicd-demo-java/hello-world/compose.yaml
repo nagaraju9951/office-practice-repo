@@ -1,0 +1,7 @@
+services:
+  hello-world:
+    restart: on-failure
+    image: ynraju4/hello-world:latest
+    hostname: hello-world
+    ports:
+      - 80:8080

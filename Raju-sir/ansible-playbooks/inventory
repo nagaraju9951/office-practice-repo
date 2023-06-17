@@ -1,0 +1,17 @@
+; -*-mode: ansible; coding: utf-8;-*-
+
+
+[nginx]
+webapp01     ansible_host=3.82.148.232      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Documents/CE/keys/test-ec2.pem"
+
+
+[tomcat]
+webapp02       ansible_host=18.234.188.99      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Documents/CE/keys/test-ec2.pem"
+
+[all]
+webapp01     ansible_host=3.82.148.232      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Documents/CE/keys/test-ec2.pem"
+webapp02       ansible_host=18.234.188.99      ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Documents/CE/keys/test-ec2.pem"
+
+
+[all:vars]
+ansible_ssh_pipelining=no

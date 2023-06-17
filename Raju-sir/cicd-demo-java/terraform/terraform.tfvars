@@ -1,0 +1,7 @@
+ami_id = "ami-0557a15b87f6559cf"
+inst_type = "t2.micro"
+jenkins_key_name = "jenkins-ssh"
+webapp_key_name = "webapp-ssh"
+subnet_id = "subnet-0a40cb9bb460af0d7"
+vpc_id = "vpc-06249dfa8e2a71399"
+aws_region = "us-east-1"

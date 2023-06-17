@@ -1,0 +1,31 @@
+pipeline {
+       agent {
+        node {
+            label 't060-runner'
+        }
+    }
+
+
+   stages {
+      stage('Clone Repository') {
+         steps {
+                  cleanWs()
+                  git credentialsId: 'ca-git-access', branch: 'develop', url: "https://git.cloudavise.com/visops/t060/dev-sales-1"
+
+               }
+      }
+     stage('Push Docker Image') {
+  	 steps{
+	    withCredentials([usernamePassword( credentialsId: 't060-dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+            sh "docker push ynraju4/sales:latest"
+            }      
+         }
+      }
+      stage('Purge Docker Image') {
+         steps{
+            sh "docker rmi ynraju4/sales:latest"
+         }
+      }
+   }
+}

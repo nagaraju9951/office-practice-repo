@@ -1,0 +1,12 @@
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: "Deploy sample web page"
+      package:
+        name: nginx
+    - template:
+        dest: "/var/www/html/index.html"
+        src: "index.html"
+    - service:
+        name: "nginx"
+        state: restarted
