@@ -1,0 +1,37 @@
+pipeline {
+    agent {
+        node {
+            label 't057-runner'
+        }
+    }
+
+    stages {
+        stage('Tag and Push to Docker Hub') {
+            steps {
+                script {
+                    def remoteServer = '54.144.67.133'
+                    def remoteUser = 'ubuntu'
+                    def remoteDockerImage = 'node'
+                    def imageName = "nagarajusatyala/promote-release:${env.BUILD_NUMBER}"
+                    def latestImageName = "nagarajusatyala/promote-release:latest"
+
+                    withCredentials([
+                        usernamePassword(credentialsId: 't57-new', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sshagent(['t057-ssh']) {
+                            sh """
+                                ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteServer} 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+                                docker tag ${remoteDockerImage}:v01 ${imageName} &&
+                                docker tag ${remoteDockerImage}:v01 ${latestImageName} &&
+                                docker push ${imageName} &&
+                                docker push ${latestImageName} &&
+                                docker logout'
+                            """
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

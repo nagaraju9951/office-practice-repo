@@ -1,0 +1,46 @@
+pipeline {
+    agent {
+        node {
+            label 't057-runner'
+        }
+    }
+    tools {
+        nodejs 'nodejs'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: 'ca-git-access', branch: 'develop', url: 'https://git.cloudavise.com/visops/t057/sample-reactjs-app.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install --save-dev webpack html-webpack-plugin webpack-cli handlebars handlebars-loader'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                sh 'ansible-vault decrypt --vault-id /opt/naga-vault-id demokey.pem'
+                sh 'chmod 400 demokey.pem'
+                sh 'chmod +x deploy_script.sh'
+                sh 'sudo ./deploy_script.sh prepare'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh './deploy_script.sh deploy'
+            }
+        }
+    }
+}
+

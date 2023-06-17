@@ -1,0 +1,18 @@
+; -*-mode: ansible; coding: utf-8;-*-
+
+
+[webservers]
+
+app-test    ansible_host=3.214.143.1  ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Downloads/demokey.pem"
+
+
+[loadbalancer]
+
+dev-lb        ansible_host=34.238.243.204 ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Downloads/demokey.pem"
+
+[localhost]
+app-test    ansible_host=3.214.143.1  ansible_port=22     ansible_user=ubuntu     ansible_ssh_private_key_file="~/Downloads/demokey.pem"
+
+[all:vars]
+ansible_ssh_pipelining=no
+

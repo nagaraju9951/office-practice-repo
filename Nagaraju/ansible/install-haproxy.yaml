@@ -1,0 +1,18 @@
+- hosts: loadbalancer
+  become: yes
+  tasks:
+    - name: "apt-get update"
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: "install haproxy"
+      apt:
+        name: ["haproxy"]
+        state: latest
+
+  handlers:
+    - name: restart haproxy
+      service:
+        name: haproxy
+        state: restarted

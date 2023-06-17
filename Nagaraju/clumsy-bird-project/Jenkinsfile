@@ -1,0 +1,75 @@
+pipeline 
+{
+    agent {
+     
+        node {
+     
+          label 't057-runner'
+      
+        }
+
+    }   
+    environment 
+    {
+     DOCKER_REPO_NAME = 'game'
+     APP_SERVER_IP = '3.84.227.244'
+     APP_SERVER_USERNAME = 'root'
+     CONTAINER_NAME = 'bird-game'
+     CONTAINER_PORT = '8000'
+
+    }
+    stages 
+    {
+
+        stage ('checkout src')
+        {
+            steps
+            { 
+                checkout scm
+            }
+        }
+        stage ('Build docker') 
+        {
+            steps
+            {
+                sh 'sudo docker build -t game:${BUILD_NUMBER} .'
+            }
+
+        }
+        stage ('Push') 
+        {
+            steps
+            {
+               withCredentials([usernamePassword(credentialsId: 't57-new', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) 
+                {
+                    sh "echo ${DOCKER_HUB_PASSWORD} |sudo docker login --username ${DOCKER_HUB_USERNAME} --password-stdin"
+                    sh "sudo docker tag game:${BUILD_NUMBER} ${DOCKER_HUB_USERNAME}/${DOCKER_REPO_NAME}:${BUILD_NUMBER}"
+                    sh "sudo docker push ${DOCKER_HUB_USERNAME}/${DOCKER_REPO_NAME}:${BUILD_NUMBER}"
+                }
+            }
+                    
+        }
+
+        stage('Deploy') 
+       {
+            steps
+            {
+                withCredentials([usernamePassword(credentialsId: 't57-new', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) 
+                {
+                    sh "echo ${DOCKER_HUB_PASSWORD} | sudo docker login --username ${DOCKER_HUB_USERNAME} --password-stdin"
+
+                    sshagent(['app-server-credentials']) 
+                    {
+                        sh "ssh ${APP_SERVER_USERNAME}@${APP_SERVER_IP} 'sudo docker pull ${DOCKER_HUB_USERNAME}/${DOCKER_REPO_NAME}:${BUILD_NUMBER}'"
+                        sh "ssh ${APP_SERVER_USERNAME}@${APP_SERVER_IP} 'sudo docker stop ${CONTAINER_NAME} || true'"
+                        sh "ssh ${APP_SERVER_USERNAME}@${APP_SERVER_IP} 'sudo docker rm ${CONTAINER_NAME} || true'"
+                        sh "ssh ${APP_SERVER_USERNAME}@${APP_SERVER_IP} 'sudo docker run -d -it --name ${CONTAINER_NAME} -p ${CONTAINER_PORT}:${CONTAINER_PORT} ${DOCKER_HUB_USERNAME}/${DOCKER_REPO_NAME}:${BUILD_NUMBER}'"
+                    }
+                }
+            }
+        }
+    }
+     
+}
+
+

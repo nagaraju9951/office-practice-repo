@@ -1,0 +1,25 @@
+---
+- name: Install Python and Dependencies
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Python
+      apt:
+        name:
+          - python3
+          - python3-pip
+        state: latest
+    - name: Install Required Packages
+      apt:
+        name:
+          - build-essential
+          - libssl-dev
+          - libffi-dev
+          - python3-dev
+        state: latest
+    - name: Install Python Packages
+      pip:
+        name:
+          - requests
+          - Flask
+        state: latest

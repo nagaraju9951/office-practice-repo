@@ -1,0 +1,34 @@
+- name: Copy index.html to NGINX server
+  hosts: nginx
+  become: true
+
+  tasks:
+    - name: Copy build folder
+      copy:
+        src: /opt/jenkins/workspace/VisOps/t057/sample-react.js/deploy-on-nginx/build
+        dest: /home/ubuntu
+
+    - name: Set permissions for /home/ubuntu/build
+      become: true
+      file:
+        path: /home/ubuntu/build
+        mode: '0755'
+        state: directory
+
+    - name: Change ownership of /home/ubuntu/build/index.html
+      become: true
+      file:
+        path: /home/ubuntu/build/index.html
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Copy nginx.conf
+      copy:
+        src: /opt/jenkins/workspace/VisOps/t057/sample-react.js/deploy-on-nginx/templates/nginx.conf
+        dest: /etc/nginx/nginx.conf
+
+    - name: Restart NGINX
+      service:
+        name: nginx
+        state: restarted

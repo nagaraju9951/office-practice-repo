@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  restartPolicy: Always
+  containers:
+    - name: httpd-container
+      image: ubuntu
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080

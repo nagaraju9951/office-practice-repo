@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+spec:
+  restartPolicy: Always
+  imagePullSecrets:
+    - name: naga
+  containers:
+    - name: httpd-container
+      image: nagarajusatyala/private-repo:v2
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8800
+

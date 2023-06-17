@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  restartPolicy: Always
+  imagePullSecrets:
+    - name: nagas
+  containers:
+    - name: httpd-container
+      image: 918677086739.dkr.ecr.us-east-1.amazonaws.com/new-repo:latest
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 80
